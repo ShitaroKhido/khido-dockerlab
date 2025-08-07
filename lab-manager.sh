@@ -91,7 +91,7 @@ function validate_env() {
         echo "Validation script not found. Basic checks:"
         echo "✓ .env file exists: $([ -f .env ] && echo "Yes" || echo "No")"
         echo "✓ Docker available: $(command -v docker >/dev/null && echo "Yes" || echo "No")"
-        echo "✓ Docker Compose available: $(command -v docker-compose >/dev/null && echo "Yes" || echo "No")"
+        echo "✓ Docker Compose available: $(command -v docker >/dev/null && docker compose version >/dev/null 2>&1 && echo "Yes" || echo "No")"
     fi
 }
 
@@ -124,7 +124,7 @@ function show_env() {
 
 function start_lab() {
     echo "Starting lab environment..."
-    docker-compose up -d
+    docker compose up -d
     echo "Lab started successfully!"
     echo "SSH: ssh ${UBUNTU_USERNAME:-ubuntu}@localhost -p ${SSH_PORT} (password: ${UBUNTU_PASSWORD:-ubuntu123})"
     echo "Website: http://localhost:${HTTP_PORT}"
@@ -132,19 +132,19 @@ function start_lab() {
 
 function stop_lab() {
     echo "Stopping lab environment..."
-    docker-compose down
+    docker compose down
     echo "Lab stopped successfully!"
 }
 
 function restart_lab() {
     echo "Restarting lab environment..."
-    docker-compose restart
+    docker compose restart
     echo "Lab restarted successfully!"
 }
 
 function show_status() {
     echo "Container status:"
-    docker-compose ps
+    docker compose ps
     echo ""
     echo "Port mappings:"
     docker port $CONTAINER_NAME 2>/dev/null || echo "Container not running"
@@ -159,7 +159,7 @@ function show_status() {
 
 function show_logs() {
     echo "Container logs:"
-    docker-compose logs --tail=50 ubuntu-server
+    docker compose logs --tail=50 ubuntu-server
 }
 
 function connect_ssh() {
@@ -171,7 +171,7 @@ function connect_ssh() {
 
 function open_shell() {
     echo "Opening shell in container..."
-    docker-compose exec ubuntu-server bash
+    docker compose exec ubuntu-server bash
 }
 
 function open_website() {
@@ -235,7 +235,7 @@ function cleanup() {
     read -p "Are you sure? (y/N): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        docker-compose down -v
+        docker compose down -v
         
         # Remove images with different tags
         docker rmi "${DOCKER_HUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}" 2>/dev/null || true

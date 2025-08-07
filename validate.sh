@@ -68,7 +68,7 @@ echo "Checking prerequisites..."
 
 # Check required commands
 check_command "docker"
-check_command "docker-compose"
+check_command "docker" && docker compose version >/dev/null 2>&1 && echo -e "${GREEN}✓${NC} docker compose is available" || (echo -e "${RED}✗${NC} docker compose is not available" && VALIDATION_PASSED=false)
 
 echo ""
 echo "Checking file structure..."

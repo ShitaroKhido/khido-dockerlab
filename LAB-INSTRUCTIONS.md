@@ -16,13 +16,13 @@ This lab demonstrates Docker containerization skills by creating an Ubuntu serve
 **Option A: Using Docker Compose (Recommended)**
 ```bash
 cd docker
-docker-compose up -d
+docker compose up -d
 ```
 
 **Option B: Using Dockerfile Build**
 ```bash
 cd docker
-docker-compose -f docker-compose-build.yml up -d --build
+docker compose -f docker-compose-build.yml up -d --build
 ```
 
 **Option C: Using Lab Manager Script**
@@ -34,7 +34,7 @@ cd docker
 ### Step 2: Verify Container Creation
 ```bash
 # Check container status
-docker-compose ps
+docker compose ps
 
 # View container details
 docker inspect khid-pagna-ubuntu-server
@@ -80,14 +80,14 @@ vim /var/www/html/index.html
 
 # Or edit the local file and rebuild (if using Dockerfile)
 vim website/index.html
-docker-compose -f docker-compose-build.yml up -d --build
+docker compose -f docker-compose-build.yml up -d --build
 ```
 
 ### Step 6: Prepare for Docker Hub Push
 
 1. **Stop the container:**
 ```bash
-docker-compose down
+docker compose down
 ```
 
 2. **Commit the container:**
@@ -133,11 +133,11 @@ docker push khidpagna/ubuntu-lab-server:khid-pagna
 ### Container Won't Start
 ```bash
 # Check logs
-docker-compose logs
+docker compose logs
 
 # Remove and recreate
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### SSH Connection Refused
