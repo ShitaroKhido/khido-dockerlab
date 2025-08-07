@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  ubuntu-server:
+    # Build from Dockerfile instead of using base Ubuntu image
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: khido/ubuntu-lab-server:latest
+    container_name: khido-ubuntu-server
+    hostname: ubuntu-lab-server
+    
+    # Keep container running
+    stdin_open: true
+    tty: true
+    
+    # Port mappings
+    ports:
+      - "2222:22"    # SSH access
+      - "8080:80"    # Nginx web server
+      - "8443:443"   # HTTPS (if needed)
+    
+    # Environment variables
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=Asia/Phnom_Penh
+    
+    # Volume mounts for persistence and SSH keys
+    volumes:
+      - ./ssh-keys:/home/ubuntu/.ssh-host
+      - ubuntu-data:/home/ubuntu
+    
+    # Network configuration
+    networks:
+      - lab-network
+    
+    # Restart policy
+    restart: unless-stopped
+
+# Define network
+networks:
+  lab-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# Define volumes for data persistence
+volumes:
+  ubuntu-data:
+    driver: local

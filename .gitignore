@@ -1,0 +1,30 @@
+# Environment files
+.env
+
+# Docker volumes and data
+docker-data/
+
+# SSH keys (for security)
+ssh-keys/id_*
+ssh-keys/known_hosts
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker build context
+.dockerignore

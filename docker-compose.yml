@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  ubuntu-server:
+    # Use Ubuntu 20.04 LTS as base image
+    image: ubuntu:20.04
+    container_name: ${CONTAINER_NAME:-khid-pagna-ubuntu-server}
+    hostname: ${HOSTNAME:-ubuntu-lab-server}
+    
+    # Keep container running
+    stdin_open: true
+    tty: true
+    
+    # Port mappings using environment variables
+    ports:
+      - "${SSH_PORT:-2222}:22"      # SSH access
+      - "${HTTP_PORT:-8080}:80"     # Nginx web server
+      - "${HTTPS_PORT:-8443}:443"   # HTTPS (if needed)
+    
+    # Environment variables
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=${TZ:-Asia/Phnom_Penh}
+      - STUDENT_NAME=${STUDENT_NAME:-Student Name}
+      - STUDENT_ID=${STUDENT_ID:-Student ID}
+      - UBUNTU_USERNAME=${UBUNTU_USERNAME:-ubuntu}
+      - UBUNTU_PASSWORD=${UBUNTU_PASSWORD:-ubuntu123}
+      - COURSE_NAME=${COURSE_NAME:-Cloud Technology}
+      - INSTITUTION=${INSTITUTION:-PPUA}
+      - EXAM_TYPE=${EXAM_TYPE:-midterm}
+    
+    # Volume mounts for persistence
+    volumes:
+      - ./scripts:/scripts
+      - ./website:/website
+      - ./ssh-keys:/home/ubuntu/.ssh-host
+      - ubuntu-data:/home/ubuntu
+    
+    # Network configuration
+    networks:
+      - lab-network
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Run the setup script
+    command: ["bash", "/scripts/setup.sh"]
+
+# Define network
+networks:
+  lab-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${NETWORK_SUBNET:-172.20.0.0/16}
+
+# Define volumes for data persistence
+volumes:
+  ubuntu-data:
+    driver: local
